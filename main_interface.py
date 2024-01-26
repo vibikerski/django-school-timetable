@@ -1,6 +1,7 @@
 import sys
 from PyQt6.QtWidgets import QLabel, QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QGraphicsScene, QGraphicsView
 from creation_interface import CreationWindow
+from update_interface import UpdaterWindow
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -72,10 +73,27 @@ class MainWindow(QMainWindow):
     def switch_to_update_scene(self):
         self.main_scene.clear()
         
+        self.update_subject_button = QPushButton('Update Subject')
+        self.update_subject_button.clicked.connect(self.update_subject)
+
+        self.update_teacher_button = QPushButton('Update Teacher')
+        self.update_teacher_button.clicked.connect(self.update_teacher)
+
+        self.update_class_button = QPushButton('Update Class')
+        self.update_class_button.clicked.connect(self.update_class)
+
+        self.update_student_button = QPushButton('Update Student')
+        self.update_student_button.clicked.connect(self.update_student)
+
+        self.update_layout = QVBoxLayout()
+
+        self.update_layout.addWidget(self.update_subject_button)
+        self.update_layout.addWidget(self.update_teacher_button)
+        self.update_layout.addWidget(self.update_class_button)
+        self.update_layout.addWidget(self.update_student_button)
+        
         update_widget = QWidget()
-        update_layout = QVBoxLayout()
-        update_layout.addWidget(QLabel("Update Scene Content"))
-        update_widget.setLayout(update_layout)
+        update_widget.setLayout(self.update_layout)
         
         update_scene = QGraphicsScene()
         update_scene.addWidget(update_widget)
@@ -124,6 +142,22 @@ class MainWindow(QMainWindow):
     def create_student(self):
         self.creation_window = CreationWindow('Student')
         self.creation_window.show()
+    
+    def update_subject(self):
+        self.update_window = UpdaterWindow('Subject')
+        self.update_window.show()
+    
+    def update_teacher(self):
+        self.update_window = UpdaterWindow('Teacher')
+        self.update_window.show()
+    
+    def update_class(self):
+        self.update_window = UpdaterWindow('Class')
+        self.update_window.show()
+    
+    def update_student(self):
+        self.update_window = UpdaterWindow('Student')
+        self.update_window.show()
 
 def run_interface():
     app = QApplication(sys.argv)

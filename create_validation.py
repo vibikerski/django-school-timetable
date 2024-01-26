@@ -4,12 +4,13 @@ class Creator:
     @staticmethod
     def create_subject(values):
         if len(values["Title"])>100:
-            return {"error": "Title is way too long."}
+            return {"error": "Title is too long."}
         Subject(
             title=values["Title"],
             description=values["Description"]
         )
         return None
+
     @staticmethod
     def create_teacher(values):
         try:
@@ -21,6 +22,13 @@ class Creator:
             int(values["Birth Year"])
         except:
             return {"error": "The birth year is unprocessable."}
+
+        if len(values["Name"]) > 100:
+            return {"error": "Name is too long."}
+        elif len(values["Surname"]) > 100:
+            return {"error": "Surname is too long."}
+        elif len(values["Position"]) > 150:
+            return {"error": "Position is too long."}
 
         t = Teacher(
             name=values["Name"],
@@ -39,6 +47,9 @@ class Creator:
         except:
             return {"error": "The teacher does not exist."}
 
+        if len(values["Title"]) > 100:
+            return {"error": "Title is too long."}
+        
         Class(
             title=values["Title"],
             teacher=teacher
@@ -57,6 +68,11 @@ class Creator:
         except:
             return {"error": "The birth year is unprocessable."}
 
+        if len(values["Name"]) > 100:
+            return {"error": "Name is too long."}
+        elif len(values("Surname")) > 100:
+            return {"error": "Surname is too long."}
+        
         Student(
             name=values["Name"],
             surname=values["Surname"],
