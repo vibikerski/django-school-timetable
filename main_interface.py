@@ -1,7 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QLabel, QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QGraphicsScene, QGraphicsView
-from creation_interface import CreationWindow
-from update_interface import UpdaterWindow
+from entity_interface import EntityWindow
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -12,152 +11,69 @@ class MainWindow(QMainWindow):
         self.main_scene = QGraphicsScene()
         self.main_view = QGraphicsView(self.main_scene)
 
-        self.create_button = QPushButton('Create')
-        self.update_button = QPushButton('Update')
-        self.get_button = QPushButton('Get')
-        self.delete_button = QPushButton('Delete')
+        self.scene_buttons_mapping = {
+            'create': {'text': 'Create', 'operation': self.create_entity},
+            'update': {'text': 'Update', 'operation': self.update_entity},
+            'get': {'text': 'Get', 'operation': self.get_entity},
+            'delete': {'text': 'Delete', 'operation': self.delete_entity}
+        }
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
 
         self.main_layout = QVBoxLayout()
-
         self.main_layout.addWidget(self.main_view)
-        self.main_layout.addWidget(self.create_button)
-        self.main_layout.addWidget(self.update_button)
-        self.main_layout.addWidget(self.get_button)
-        self.main_layout.addWidget(self.delete_button)
-
         self.central_widget.setLayout(self.main_layout)
 
-        self.create_button.clicked.connect(self.switch_to_create_scene)
-        self.update_button.clicked.connect(self.switch_to_update_scene)
-        self.get_button.clicked.connect(self.switch_to_get_scene)
-        self.delete_button.clicked.connect(self.switch_to_delete_scene)
-        
+        self.create_buttons()
         self.populate_main_scene()
-
+    
     def populate_main_scene(self):
         self.main_scene.clear()
         self.main_scene.addText("Press buttons below to interact with the database.")
+
+    def create_buttons(self):
+        for scene_type, properties in self.scene_buttons_mapping.items():
+            button = QPushButton(f'{properties["text"]}')
+            button.clicked.connect(lambda _, st=scene_type: self.switch_scene(st))
+            self.main_layout.addWidget(button)
     
-    def switch_to_create_scene(self):
+    def switch_scene(self, scene_type):
         self.main_scene.clear()
-        self.create_subject_button = QPushButton('Create Subject')
-        self.create_subject_button.clicked.connect(self.create_subject)
+        entity_types = ['Subject', 'Teacher', 'Class', 'Student']
+        layout = QVBoxLayout()
 
-        self.create_teacher_button = QPushButton('Create Teacher')
-        self.create_teacher_button.clicked.connect(self.create_teacher)
+        for entity_type in entity_types:
+            button_text = f'{self.scene_buttons_mapping[scene_type]["text"]} {entity_type}'
+            button = QPushButton(button_text)
+            button.clicked.connect(self.scene_buttons_mapping[scene_type]["operation"](entity_type))
+            layout.addWidget(button)
 
-        self.create_class_button = QPushButton('Create Class')
-        self.create_class_button.clicked.connect(self.create_class)
+        widget = QWidget()
+        widget.setLayout(layout)
 
-        self.create_student_button = QPushButton('Create Student')
-        self.create_student_button.clicked.connect(self.create_student)
+        scene = QGraphicsScene()
+        scene.addWidget(widget)
 
-        self.create_layout = QVBoxLayout()
+        self.main_view.setScene(scene)
 
-        self.create_layout.addWidget(self.create_subject_button)
-        self.create_layout.addWidget(self.create_teacher_button)
-        self.create_layout.addWidget(self.create_class_button)
-        self.create_layout.addWidget(self.create_student_button)
+    def create_entity(self, entity_type):
+        def create():
+            self.creation_window = EntityWindow(entity_type, 'create')
+            self.creation_window.show()
+        return create
 
-        create_widget = QWidget()
-        create_widget.setLayout(self.create_layout)
+    def update_entity(self, entity_type):
+        def update():
+            self.update_window = EntityWindow(entity_type, 'update')
+            self.update_window.show()
+        return update
 
-        create_scene = QGraphicsScene()
-        create_scene.addWidget(create_widget)
+    def get_entity(self, entity_type):
+        return lambda: print(f'Getting {entity_type}')
 
-        self.main_view.setScene(create_scene)
-
-    def switch_to_update_scene(self):
-        self.main_scene.clear()
-        
-        self.update_subject_button = QPushButton('Update Subject')
-        self.update_subject_button.clicked.connect(self.update_subject)
-
-        self.update_teacher_button = QPushButton('Update Teacher')
-        self.update_teacher_button.clicked.connect(self.update_teacher)
-
-        self.update_class_button = QPushButton('Update Class')
-        self.update_class_button.clicked.connect(self.update_class)
-
-        self.update_student_button = QPushButton('Update Student')
-        self.update_student_button.clicked.connect(self.update_student)
-
-        self.update_layout = QVBoxLayout()
-
-        self.update_layout.addWidget(self.update_subject_button)
-        self.update_layout.addWidget(self.update_teacher_button)
-        self.update_layout.addWidget(self.update_class_button)
-        self.update_layout.addWidget(self.update_student_button)
-        
-        update_widget = QWidget()
-        update_widget.setLayout(self.update_layout)
-        
-        update_scene = QGraphicsScene()
-        update_scene.addWidget(update_widget)
-        
-        self.main_view.setScene(update_scene)
-
-    def switch_to_get_scene(self):
-        self.main_scene.clear()
-
-        get_widget = QWidget()
-        get_layout = QVBoxLayout()
-        get_layout.addWidget(QLabel("Get Scene Content"))
-        get_widget.setLayout(get_layout)
-
-        get_scene = QGraphicsScene()
-        get_scene.addWidget(get_widget)
-
-        self.main_view.setScene(get_scene)
-
-    def switch_to_delete_scene(self):
-        self.main_scene.clear()
-
-        delete_widget = QWidget()
-        delete_layout = QVBoxLayout()
-        delete_layout.addWidget(QLabel("Delete Scene Content"))
-        delete_widget.setLayout(delete_layout)
-
-        delete_scene = QGraphicsScene()
-        delete_scene.addWidget(delete_widget)
-
-        self.main_view.setScene(delete_scene)
-
-
-    def create_subject(self):
-        self.creation_window = CreationWindow('Subject')
-        self.creation_window.show()
-
-    def create_teacher(self):
-        self.creation_window = CreationWindow('Teacher')
-        self.creation_window.show()
-
-    def create_class(self):
-        self.creation_window = CreationWindow('Class')
-        self.creation_window.show()
-
-    def create_student(self):
-        self.creation_window = CreationWindow('Student')
-        self.creation_window.show()
-    
-    def update_subject(self):
-        self.update_window = UpdaterWindow('Subject')
-        self.update_window.show()
-    
-    def update_teacher(self):
-        self.update_window = UpdaterWindow('Teacher')
-        self.update_window.show()
-    
-    def update_class(self):
-        self.update_window = UpdaterWindow('Class')
-        self.update_window.show()
-    
-    def update_student(self):
-        self.update_window = UpdaterWindow('Student')
-        self.update_window.show()
+    def delete_entity(self, entity_type):
+        return lambda: print(f'Deleting {entity_type}')
 
 def run_interface():
     app = QApplication(sys.argv)
