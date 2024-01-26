@@ -2,6 +2,15 @@ from school_timetable.models import Subject, Teacher, Class, Student
 
 class Creator:
     @staticmethod
+    def create_subject(values):
+        if len(values["Title"])>100:
+            return {"error": "Title is way too long."}
+        Subject(
+            title=values["Title"],
+            description=values["Description"]
+        )
+        return None
+    @staticmethod
     def create_teacher(values):
         try:
             subject = Subject.objects.get(id=values["Subject ID"])
@@ -21,7 +30,7 @@ class Creator:
         )
         t.save()
         subject.teacher_set.add(t)
-        return
+        return None
 
     @staticmethod
     def create_class(values):
@@ -34,7 +43,7 @@ class Creator:
             title=values["Title"],
             teacher=teacher
         ).save()
-        return
+        return None
 
     @staticmethod
     def create_student(values):
@@ -54,7 +63,7 @@ class Creator:
             birth_year=int(values["Birth Year"]),
             study_class=class_
         ).save()
-        return
+        return None
 
     @staticmethod
     def get_fields(entity):

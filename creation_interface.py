@@ -1,5 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
-from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
 from create_validation import Creator
 
 class CreationWindow(QWidget):
