@@ -15,7 +15,7 @@ class Teacher(models.Model):
     birth_year = models.IntegerField()
     position = models.CharField(max_length=150)
 
-    subject = models.ForeignKey(Subject, on_delete=models.DO_NOTHING)
+    subject = models.ManyToManyField(Subject)
 
     def __str__(self):
         return f'{self.name} {self.surname}'
