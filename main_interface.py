@@ -70,7 +70,10 @@ class MainWindow(QMainWindow):
         return update
 
     def get_entity(self, entity_type):
-        return lambda: print(f'Getting {entity_type}')
+        def get():
+            self.get_window = EntityWindow(entity_type, 'get')
+            self.get_window.show()
+        return get
 
     def delete_entity(self, entity_type):
         return lambda: print(f'Deleting {entity_type}')
