@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QLabel, QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QGraphicsScene, QGraphicsView
+from PyQt6.QtWidgets import QSizePolicy, QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QGraphicsScene, QGraphicsView
 from entity_interface import EntityWindow
 
 class MainWindow(QMainWindow):
@@ -42,12 +42,17 @@ class MainWindow(QMainWindow):
         self.main_scene.clear()
         entity_types = ['Subject', 'Teacher', 'Class', 'Student']
         layout = QVBoxLayout()
+        layout.setSpacing(20)
 
         for entity_type in entity_types:
             button_text = f'{self.scene_buttons_mapping[scene_type]["text"]} {entity_type}'
             button = QPushButton(button_text)
+            button.setSizePolicy(
+                QSizePolicy.Policy.Preferred,
+                QSizePolicy.Policy.Minimum
+            )
             button.clicked.connect(self.scene_buttons_mapping[scene_type]["operation"](entity_type))
-            layout.addWidget(button)
+            layout.addWidget(button, 1)
 
         widget = QWidget()
         widget.setLayout(layout)
@@ -76,7 +81,10 @@ class MainWindow(QMainWindow):
         return get
 
     def delete_entity(self, entity_type):
-        return lambda: print(f'Deleting {entity_type}')
+        def delete():
+            self.delete_window = EntityWindow(entity_type, 'delete')
+            self.delete_window.show()
+        return delete
 
 def run_interface():
     app = QApplication(sys.argv)

@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget
 from create_validation import Creator
 from update_validation import Updater
 from get_validation import Getter
+from delete_validation import Deleter
 
 class EntityWindow(QWidget):
     def __init__(self, entity, operation):
@@ -49,7 +50,7 @@ class EntityWindow(QWidget):
         elif self.operation == 'get':
             return Getter.get_fields(self.entity)
         elif self.operation == 'delete':
-            pass
+            return Deleter.get_fields(self.entity)
 
     def submit_operation(self):
         values = {}
@@ -64,7 +65,7 @@ class EntityWindow(QWidget):
             elif self.operation == 'get':
                 result = getattr(Getter, f'get_{self.entity.lower()}')(values)
             elif self.operation == 'delete':
-                pass
+                result = getattr(Deleter, f'delete_{self.entity.lower()}')(values)
         except Exception as e:
             self.error_label.setText(str(e))
             return
@@ -75,11 +76,11 @@ class EntityWindow(QWidget):
             self.success_operation(result["data"])
     
     def success_operation(self, data):
-        if self.operation == "update" or self.operation == "create":
+        if self.operation == "get":
+            self.success_get(data)
+        else:
             QMessageBox.information(self, "Success", f"{self.entity} {self.operation}d successfully.")
             self.close()
-        elif self.operation == "get":
-            self.success_get(data)
             
     def success_get(self, data):
         for _, input_field in self.input_fields.items():
