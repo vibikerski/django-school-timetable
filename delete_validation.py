@@ -1,4 +1,4 @@
-from school_timetable.models import Subject, Teacher, Class, Student
+from school_timetable.models import Subject, Teacher, Class, Student, Grade, Schedule
 from base_handler import BaseHandler
 
 
@@ -27,6 +27,14 @@ class Deleter(BaseHandler):
     @staticmethod
     def delete_student(values):
         return Deleter.delete_instance(Student, values)
+
+    @staticmethod
+    def delete_grade(values):
+        return Deleter.delete_instance(Grade, values)
+
+    @staticmethod
+    def delete_schedule(values):
+        return Deleter.delete_instance(Schedule, values)
 
     @staticmethod
     def get_fields(entity):

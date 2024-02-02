@@ -1,4 +1,4 @@
-from school_timetable.models import Subject, Teacher, Class, Student
+from school_timetable.models import Subject, Teacher, Class, Student, Grade, Schedule
 from base_handler import BaseHandler
 
 
@@ -25,6 +25,14 @@ class Getter(BaseHandler):
     @staticmethod
     def get_student(values):
         return Getter.get_instance(Student, values)
+
+    @staticmethod
+    def get_grade(values):
+        return Getter.get_instance(Grade, values)
+
+    @staticmethod
+    def get_schedule(values):
+        return Getter.get_instance(Schedule, values)
 
     @staticmethod
     def get_fields(entity):

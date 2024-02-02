@@ -46,4 +46,19 @@ class BaseHandler:
                 ('Birth Year', 'IntegerField'),
                 ('Class ID', 'IntegerField')
             ])
+        elif entity == "Grade":
+            fields.extend([
+                ('Value', 'TextField'),
+                ('Date', 'DateField'),
+                ('Student ID', 'IntegerField'),
+                ('Subject ID', 'IntegerField')
+            ])
+        elif entity == "Schedule":
+            fields.extend([
+                ('Week day', 'TextField'),
+                ('Start time', 'TimeField'),
+                ('Subject ID', 'IntegerField'),
+                ('Class ID', 'IntegerField'),
+                ('Teacher ID', 'IntegerField')
+            ])
         return fields
