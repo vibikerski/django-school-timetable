@@ -4,6 +4,7 @@ from update_validation import Updater
 from get_validation import Getter
 from delete_validation import Deleter
 
+
 class EntityWindow(QWidget):
     def __init__(self, entity, operation):
         super().__init__()
@@ -13,12 +14,13 @@ class EntityWindow(QWidget):
         self.layout = QVBoxLayout()
 
         if operation == 'update':
-            self.caution_label = QLabel("Only type the ID and the fields that you wish to change.")
+            text = 'Only type the ID and the fields that you wish to change.'
+            self.caution_label = QLabel(text)
             self.layout.addWidget(self.caution_label)
         elif operation == "get":
             self.result_widget = QVBoxLayout()
             self.layout.addLayout(self.result_widget)
-        
+
         self.input_fields = {}
         fields = self.get_fields()
         for field_name, _ in fields:
@@ -57,15 +59,16 @@ class EntityWindow(QWidget):
         for field_name, field_widget in self.input_fields.items():
             values[field_name] = field_widget.text()
         result = ''
+        func_name = f'{self.operation}_{self.entity.lower()}'
         try:
             if self.operation == 'create':
-                result = getattr(Creator, f'create_{self.entity.lower()}')(values)
+                result = getattr(Creator, func_name)(values)
             elif self.operation == 'update':
-                result = getattr(Updater, f'update_{self.entity.lower()}')(values)
+                result = getattr(Updater, func_name)(values)
             elif self.operation == 'get':
-                result = getattr(Getter, f'get_{self.entity.lower()}')(values)
+                result = getattr(Getter, func_name)(values)
             elif self.operation == 'delete':
-                result = getattr(Deleter, f'delete_{self.entity.lower()}')(values)
+                result = getattr(Deleter, func_name)(values)
         except Exception as e:
             self.error_label.setText(str(e))
             return
@@ -74,14 +77,15 @@ class EntityWindow(QWidget):
             self.error_label.setText(result["error"])
         else:
             self.success_operation(result["data"])
-    
+
     def success_operation(self, data):
         if self.operation == "get":
             self.success_get(data)
         else:
-            QMessageBox.information(self, "Success", f"{self.entity} {self.operation}d successfully.")
+            msg = f"{self.entity} {self.operation}d successfully."
+            QMessageBox.information(self, "Success", msg)
             self.close()
-            
+
     def success_get(self, data):
         for _, input_field in self.input_fields.items():
             input_field.hide()
@@ -93,4 +97,3 @@ class EntityWindow(QWidget):
                 continue
             label = QLabel(f'{name}: {value}')
             self.result_widget.addWidget(label)
-        

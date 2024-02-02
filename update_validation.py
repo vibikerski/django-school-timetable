@@ -1,12 +1,14 @@
 from school_timetable.models import Subject, Teacher, Class, Student
 from base_handler import BaseHandler
 
+
 class Updater(BaseHandler):
     @staticmethod
     def update_subject(values):
-        error, subject = BaseHandler._validate_and_get_instance(Subject, values.get('ID'))
-        if error:
-            return {"error": error}
+        args = (Subject, values.get('ID'))
+        err, subject = BaseHandler._validate_and_get_instance(*args)
+        if err:
+            return {"error": err}
 
         title = values.get('Title')
         if title and len(title) > 100:
@@ -26,9 +28,10 @@ class Updater(BaseHandler):
 
     @staticmethod
     def update_teacher(values):
-        error, teacher = BaseHandler._validate_and_get_instance(Teacher, values.get('ID'))
-        if error:
-            return {"error": error}
+        args = (Teacher, values.get('ID'))
+        err, teacher = BaseHandler._validate_and_get_instance(*args)
+        if err:
+            return {"error": err}
 
         name = values.get("Name")
         if name and len(name) > 100:
@@ -47,13 +50,15 @@ class Updater(BaseHandler):
             try:
                 birth_year = int(birth_year)
             except ValueError:
-                return {"error": "The birth year is unprocessable.", "data": None}
+                err = "The birth year is unprocessable."
+                return {"error": err, "data": None}
 
         subject_id = values.get("Subject ID")
         if subject_id:
-            error, subject = BaseHandler._validate_and_get_instance(Subject, subject_id)
-            if error:
-                return {"error": error, "data": None}
+            args = (Subject, subject_id)
+            err, subject = BaseHandler._validate_and_get_instance(*args)
+            if err:
+                return {"error": err, "data": None}
             subject.teacher_set.add(teacher)
 
         if name:
@@ -66,12 +71,12 @@ class Updater(BaseHandler):
         teacher.save()
         return {"error": None, "data": None}
 
-    
     @staticmethod
     def update_class(values):
-        error, class_ = BaseHandler._validate_and_get_instance(Class, values.get("ID"))
-        if error:
-            return {"error": error, "data": None}
+        args = (Class, values.get("ID"))
+        err, class_ = BaseHandler._validate_and_get_instance(*args)
+        if err:
+            return {"error": err, "data": None}
 
         title = values.get('Title')
         if title and len(title) > 100:
@@ -79,9 +84,10 @@ class Updater(BaseHandler):
 
         teacher_id = values.get("Teacher ID")
         if teacher_id:
-            error, teacher = BaseHandler._validate_and_get_instance(Teacher, teacher_id)
-            if error:
-                return {"error": error, "data": None}
+            args = (Teacher, teacher_id)
+            err, teacher = BaseHandler._validate_and_get_instance(*args)
+            if err:
+                return {"error": err, "data": None}
             class_.teacher = teacher
 
         if title:
@@ -92,39 +98,42 @@ class Updater(BaseHandler):
 
     @staticmethod
     def update_student(values):
-        error, student = BaseHandler._validate_and_get_instance(Student, values.get("ID"))
-        if error:
-            return {"error": error, "data": None}
-        
+        args = (Student, values.get("ID"))
+        err, student = BaseHandler._validate_and_get_instance(*args)
+        if err:
+            return {"error": err, "data": None}
+
         name = values.get('Name')
         if name and len(name) > 100:
             return {"error": "Name is too long.", "data": None}
-        
+
         surname = values.get('Surname')
         if surname and len(surname) > 100:
             return {"error": "Surname is too long.", "data": None}
-        
+
         birth_year = values.get('Birth Year')
         if birth_year:
             try:
                 birth_year = int(birth_year)
             except ValueError:
-                return {"error": "The birth year is unprocessable.", "data": None}
-        
+                err = "The birth year is unprocessable."
+                return {"error": err, "data": None}
+
         class_id = values.get('Class ID')
         if class_id:
-            error, class_ = BaseHandler._validate_and_get_instance(Class, class_id)
-            if error:
-                return {"error": error, "data": None}
+            args = (Class, class_id)
+            err, class_ = BaseHandler._validate_and_get_instance(*args)
+            if err:
+                return {"error": err, "data": None}
             student.study_class = class_
-        
+
         if name:
             student.name = name
         if surname:
             student.surname = surname
         if birth_year:
             student.birth_year = birth_year
-        
+
         student.save()
         return {"error": None, "data": None}
 

@@ -1,5 +1,8 @@
 import sys
-from PyQt6.QtWidgets import QSizePolicy, QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QGraphicsScene, QGraphicsView
+from PyQt6.QtWidgets import (QSizePolicy, QApplication, QMainWindow, QWidget,
+                             QPushButton, QVBoxLayout, QGraphicsScene,
+                             QGraphicsView)
+from PyQt6.QtGui import QFont
 from entity_interface import EntityWindow
 
 class MainWindow(QMainWindow):
@@ -27,17 +30,19 @@ class MainWindow(QMainWindow):
 
         self.create_buttons()
         self.populate_main_scene()
-    
+
     def populate_main_scene(self):
         self.main_scene.clear()
-        self.main_scene.addText("Press buttons below to interact with the database.")
+        text = 'Press buttons below to interact with the database.'
+        self.main_scene.addText(text)
 
     def create_buttons(self):
         for scene_type, properties in self.scene_buttons_mapping.items():
             button = QPushButton(f'{properties["text"]}')
+            button.setFont(QFont('Helvetica', 17))
             button.clicked.connect(lambda _, st=scene_type: self.switch_scene(st))
             self.main_layout.addWidget(button)
-    
+
     def switch_scene(self, scene_type):
         self.main_scene.clear()
         entity_types = ['Subject', 'Teacher', 'Class', 'Student']
@@ -45,13 +50,16 @@ class MainWindow(QMainWindow):
         layout.setSpacing(20)
 
         for entity_type in entity_types:
-            button_text = f'{self.scene_buttons_mapping[scene_type]["text"]} {entity_type}'
+            base_text = self.scene_buttons_mapping[scene_type]["text"]
+            button_text = f'{base_text} {entity_type}'
             button = QPushButton(button_text)
             button.setSizePolicy(
                 QSizePolicy.Policy.Preferred,
                 QSizePolicy.Policy.Minimum
             )
-            button.clicked.connect(self.scene_buttons_mapping[scene_type]["operation"](entity_type))
+            button.setFont(QFont('Times New Roman', 20))
+            func = self.scene_buttons_mapping[scene_type]["operation"]
+            button.clicked.connect(func(entity_type))
             layout.addWidget(button, 1)
 
         widget = QWidget()
@@ -85,6 +93,7 @@ class MainWindow(QMainWindow):
             self.delete_window = EntityWindow(entity_type, 'delete')
             self.delete_window.show()
         return delete
+
 
 def run_interface():
     app = QApplication(sys.argv)

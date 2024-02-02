@@ -14,13 +14,13 @@ class BaseHandler:
         if instance:
             return None, instance
         return f"{model.__name__} ID not found.", None
-    
+
     @staticmethod
     def get_fields(entity, include_id=False):
         fields = []
         if include_id:
             fields.append(('ID', 'IntegerField'))
-        
+
         if entity == 'Subject':
             fields.extend([
                 ('Title', 'CharField'),
