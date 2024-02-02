@@ -37,8 +37,6 @@ class Creator(BaseHandler):
         if len(position) > 150:
             return {"error": "Position is too long.", "data": None}
 
-        print(name, surname, birth_year, position)
-
         t = Teacher(
             name=name,
             surname=surname,

@@ -1,5 +1,8 @@
 import sys
-from PyQt6.QtWidgets import QSizePolicy, QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QGraphicsScene, QGraphicsView
+from PyQt6.QtWidgets import (QSizePolicy, QApplication, QMainWindow, QWidget,
+                             QPushButton, QVBoxLayout, QGraphicsScene,
+                             QGraphicsView)
+from PyQt6.QtGui import QFont
 from entity_interface import EntityWindow
 
 class MainWindow(QMainWindow):
@@ -36,6 +39,7 @@ class MainWindow(QMainWindow):
     def create_buttons(self):
         for scene_type, properties in self.scene_buttons_mapping.items():
             button = QPushButton(f'{properties["text"]}')
+            button.setFont(QFont('Helvetica', 17))
             button.clicked.connect(lambda _, st=scene_type: self.switch_scene(st))
             self.main_layout.addWidget(button)
 
@@ -53,6 +57,7 @@ class MainWindow(QMainWindow):
                 QSizePolicy.Policy.Preferred,
                 QSizePolicy.Policy.Minimum
             )
+            button.setFont(QFont('Times New Roman', 20))
             func = self.scene_buttons_mapping[scene_type]["operation"]
             button.clicked.connect(func(entity_type))
             layout.addWidget(button, 1)
