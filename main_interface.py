@@ -39,13 +39,13 @@ class MainWindow(QMainWindow):
     def create_buttons(self):
         for scene_type, properties in self.scene_buttons_mapping.items():
             button = QPushButton(f'{properties["text"]}')
-            button.setFont(QFont('Helvetica', 17))
+            button.setFont(QFont('Helvetica', 14))
             button.clicked.connect(lambda _, st=scene_type: self.switch_scene(st))
             self.main_layout.addWidget(button)
 
     def switch_scene(self, scene_type):
         self.main_scene.clear()
-        entity_types = ['Subject', 'Teacher', 'Class', 'Student']
+        entity_types = ['Subject', 'Teacher', 'Class', 'Student', 'Grade', 'Schedule']
         layout = QVBoxLayout()
         layout.setSpacing(20)
 
@@ -57,7 +57,7 @@ class MainWindow(QMainWindow):
                 QSizePolicy.Policy.Preferred,
                 QSizePolicy.Policy.Minimum
             )
-            button.setFont(QFont('Times New Roman', 20))
+            button.setFont(QFont('Times New Roman', 16))
             func = self.scene_buttons_mapping[scene_type]["operation"]
             button.clicked.connect(func(entity_type))
             layout.addWidget(button, 1)

@@ -39,3 +39,18 @@ class Student(models.Model):
 
     def __str__(self):
         return f'{self.name} {self.surname}'
+
+class Grade(models.Model):
+    value = models.IntegerField()
+    date = models.DateField()
+
+    student = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
+    subject = models.ForeignKey(Subject, on_delete=models.DO_NOTHING)
+
+class Schedule(models.Model):
+    week_day = models.TextField(100)
+    start_time = models.TimeField()
+
+    subject = models.ForeignKey(Subject, on_delete=models.DO_NOTHING)
+    study_class = models.ForeignKey(Class, on_delete=models.DO_NOTHING)
+    teacher = models.ForeignKey(Teacher, on_delete=models.DO_NOTHING)

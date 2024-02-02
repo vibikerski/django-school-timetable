@@ -1,4 +1,4 @@
-from school_timetable.models import Subject, Teacher, Class, Student
+from school_timetable.models import Subject, Teacher, Class, Student, Grade, Schedule
 from base_handler import BaseHandler
 
 
@@ -135,6 +135,97 @@ class Updater(BaseHandler):
             student.birth_year = birth_year
 
         student.save()
+        return {"error": None, "data": None}
+
+    @staticmethod
+    def update_grade(values):
+        args = (Grade, values.get("ID"))
+        err, grade = BaseHandler._validate_and_get_instance(*args)
+        if err:
+            return {"error": err, "data": None}
+
+        value = values.get('Value')
+        if value:
+            try:
+                value = int(value)
+            except ValueError:
+                return {
+                "error": "Cannot process the grade.",
+                "data": None
+            }
+
+            if value < 0:
+                return {
+                    "error": "Cannot process the grade.",
+                    "data": None
+                }
+
+            grade.value = value
+        
+        date = values.get('Date')
+        if date:
+            grade.date = date
+
+        student_id = values.get('Student ID')
+        if student_id:
+            args = (Student, student_id)
+            err, student = BaseHandler._validate_and_get_instance(*args)
+            if err:
+                return {"error": err, "data": None}
+            grade.student = student
+
+        subject_id = values.get('Subject ID')
+        if subject_id:
+            args = (Subject, subject_id)
+            err, subject = BaseHandler._validate_and_get_instance(*args)
+            if err:
+                return {"error": err, "data": None}
+            grade.subject = subject
+
+        grade.save()
+        return {"error": None, "data": None}
+
+    @staticmethod
+    def update_schedule(values):
+        args = (Schedule, values.get('ID'))
+        err, schedule = BaseHandler._validate_and_get_instance(*args)
+        if err:
+                return {"error": err, "data": None}
+
+        week_day = values.get('Week day')
+        if week_day:
+            schedule.week_day = week_day
+    
+        start_time = values.get('Start time')
+        if start_time:
+            schedule.start_time = start_time
+
+        subject_id = values.get('Subject ID')
+        subject_id = values.get('Subject ID')
+        if subject_id:
+            args = (Subject, subject_id)
+            err, subject = BaseHandler._validate_and_get_instance(*args)
+            if err:
+                return {"error": err, "data": None}
+            schedule.subject = subject
+
+        class_id = values.get('Class ID')
+        if class_id:
+            args = (Class, class_id)
+            err, class_ = BaseHandler._validate_and_get_instance(*args)
+            if err:
+                return {"error": err, "data": None}
+            schedule.study_class = class_
+
+        teacher_id = values.get('Teacher ID')
+        if teacher_id:
+            args = (Teacher, teacher_id)
+            err, teacher = BaseHandler._validate_and_get_instance(*args)
+            if err:
+                return {"error": err, "data": None}
+            schedule.teacher = teacher
+        
+        schedule.save()
         return {"error": None, "data": None}
 
     @staticmethod

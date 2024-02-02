@@ -1,4 +1,4 @@
-from school_timetable.models import Subject, Teacher, Class, Student
+from school_timetable.models import Subject, Teacher, Class, Student, Schedule, Grade
 from base_handler import BaseHandler
 
 
@@ -69,7 +69,7 @@ class Creator(BaseHandler):
         args = (Class, vals.get("Class ID"))
         err, study_class = BaseHandler._validate_and_get_instance(*args)
         if err:
-            return {"error": "The class does not exist.", "data": None}
+            return {"error": err, "data": None}
 
         birth_year = vals.get("Birth Year")
         try:
@@ -89,6 +89,67 @@ class Creator(BaseHandler):
             surname=surname,
             birth_year=birth_year,
             study_class=study_class
+        ).save()
+        return {"error": None, "data": None}
+
+    @staticmethod
+    def create_grade(vals):
+        args = (Student, vals.get("Student ID"))
+        err, student = BaseHandler._validate_and_get_instance(*args)
+        if err:
+            return {"error": err, "data": None}
+
+        args = (Subject, vals.get("Subject ID"))
+        err, subject = BaseHandler._validate_and_get_instance(*args)
+        if err:
+            return {"error": err, "data": None}
+
+        value = vals['Value']
+        try:
+            value = int(value)
+        except ValueError:
+            return {
+                "error": "Cannot process the grade.",
+                "data": None
+            }
+
+        if value < 0:
+            return {
+                "error": "Cannot process the grade.",
+                "data": None
+            }
+
+        Grade(
+            value=value,
+            date=vals['Date'],
+            student=student,
+            subject=subject
+        ).save()
+        return {"error": None, "data": None}
+
+    @staticmethod
+    def create_schedule(vals):
+        args = (Subject, vals.get("Subject ID"))
+        err, subject = BaseHandler._validate_and_get_instance(*args)
+        if err:
+            return {"error": err, "data": None}
+
+        args = (Class, vals.get('Class ID'))
+        err, study_class = BaseHandler._validate_and_get_instance(*args)
+        if err:
+            return {"error": err, "data": None}
+
+        args = (Teacher, vals.get('Teacher ID'))
+        err, teacher = BaseHandler._validate_and_get_instance(*args)
+        if err:
+            return {"error": err, "data": None}
+
+        Schedule(
+            week_day=vals.get('Week day'),
+            start_time=vals.get('Start time'),
+            subject=subject,
+            study_class=study_class,
+            teacher=teacher
         ).save()
         return {"error": None, "data": None}
 
