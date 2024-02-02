@@ -24,7 +24,7 @@ class Updater(BaseHandler):
             subject.description = description
 
         subject.save()
-        return None
+        return {"error": None, "data": None}
 
     @staticmethod
     def update_teacher(values):
