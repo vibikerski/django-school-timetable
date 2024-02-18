@@ -60,12 +60,11 @@ class EntityWindow(QWidget):
             for field_name, field_widget in self.input_fields.items()
         }
         result = ''
-        func_name = f'{self.operation}_{self.entity.lower()}'
         try:
             if self.operation == 'create':
                 result = Creator.create_instance(values, self.entity.lower())
             elif self.operation == 'update':
-                result = getattr(Updater, func_name)(values)
+                result = Updater.update_entity(values, self.entity.lower())
             elif self.operation == 'get':
                 result = Getter.get_instance(values, self.entity.lower())
             elif self.operation == 'delete':
