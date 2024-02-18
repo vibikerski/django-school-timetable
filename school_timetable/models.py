@@ -24,7 +24,7 @@ class Teacher(models.Model):
 class Class(models.Model):
     title = models.CharField(max_length=150)
 
-    teacher = models.ForeignKey(Teacher, on_delete=models.DO_NOTHING)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -35,7 +35,7 @@ class Student(models.Model):
     surname = models.CharField(max_length=100)
     birth_year = models.IntegerField()
 
-    study_class = models.ForeignKey(Class, on_delete=models.DO_NOTHING)
+    study_class = models.ForeignKey(Class, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.name} {self.surname}'
@@ -45,8 +45,8 @@ class Grade(models.Model):
     value = models.IntegerField()
     date = models.DateField()
 
-    student = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
-    subject = models.ForeignKey(Subject, on_delete=models.DO_NOTHING)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
 
 class Schedule(models.Model):

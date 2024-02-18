@@ -1,8 +1,8 @@
 from PyQt6.QtWidgets import QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
-from create_validation import Creator
-from update_validation import Updater
-from get_validation import Getter
-from delete_validation import Deleter
+import actions.create as Creator
+import actions.update as Updater
+import actions.get as Getter
+import actions.delete as Deleter
 
 
 class EntityWindow(QWidget):
@@ -55,20 +55,20 @@ class EntityWindow(QWidget):
             return Deleter.get_fields(self.entity)
 
     def submit_operation(self):
-        values = {}
-        for field_name, field_widget in self.input_fields.items():
-            values[field_name] = field_widget.text()
+        values = {
+            field_name: field_widget.text()
+            for field_name, field_widget in self.input_fields.items()
+        }
         result = ''
-        func_name = f'{self.operation}_{self.entity.lower()}'
         try:
             if self.operation == 'create':
-                result = getattr(Creator, func_name)(values)
+                result = Creator.create_instance(values, self.entity.lower())
             elif self.operation == 'update':
-                result = getattr(Updater, func_name)(values)
+                result = Updater.update_entity(values, self.entity.lower())
             elif self.operation == 'get':
-                result = getattr(Getter, func_name)(values)
+                result = Getter.get_instance(values, self.entity.lower())
             elif self.operation == 'delete':
-                result = getattr(Deleter, func_name)(values)
+                result = Deleter.delete_instance(values, self.entity.lower())
         except Exception as e:
             self.error_label.setText(str(e))
             return
