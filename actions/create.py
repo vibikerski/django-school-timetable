@@ -1,9 +1,9 @@
 from actions.base_handler import get_instance, type_model, field_model
 from actions.base_handler import get_fields as fields
-from validation import validate_creating
+from actions.validation import validate_creating
 
 
-def create_instance(values, entity_type):
+def entity(values, entity_type):
     if err := validate_creating(values, entity_type):
         return {"error": err, "data": None}
 

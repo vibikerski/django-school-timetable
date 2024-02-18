@@ -1,8 +1,8 @@
 from actions.base_handler import get_instance as get
-from validation import validate_delete_get
+from actions.validation import validate_delete_get
 
 
-def get_instance(values, entity_type):
+def entity(values, entity_type):
     if err := validate_delete_get(values, entity_type):
         return {"error": err, "data": None}
     ID = values.get('ID')

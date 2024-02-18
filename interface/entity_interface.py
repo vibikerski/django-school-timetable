@@ -4,6 +4,12 @@ import actions.update as Updater
 import actions.get as Getter
 import actions.delete as Deleter
 
+operation_to_handler = {
+    'create': Creator,
+    'update': Updater,
+    'get': Getter,
+    'delete': Deleter
+}
 
 class EntityWindow(QWidget):
     def __init__(self, entity, operation):
@@ -45,14 +51,7 @@ class EntityWindow(QWidget):
         self.setLayout(self.layout)
 
     def get_fields(self):
-        if self.operation == 'create':
-            return Creator.get_fields(self.entity)
-        elif self.operation == 'update':
-            return Updater.get_fields(self.entity)
-        elif self.operation == 'get':
-            return Getter.get_fields(self.entity)
-        elif self.operation == 'delete':
-            return Deleter.get_fields(self.entity)
+        return operation_to_handler[self.operation].get_fields(self.entity)
 
     def submit_operation(self):
         values = {
@@ -61,14 +60,8 @@ class EntityWindow(QWidget):
         }
         result = ''
         try:
-            if self.operation == 'create':
-                result = Creator.create_instance(values, self.entity.lower())
-            elif self.operation == 'update':
-                result = Updater.update_entity(values, self.entity.lower())
-            elif self.operation == 'get':
-                result = Getter.get_instance(values, self.entity.lower())
-            elif self.operation == 'delete':
-                result = Deleter.delete_instance(values, self.entity.lower())
+            handler = operation_to_handler[self.operation]
+            result = handler.entity(values, self.entity.lower())
         except Exception as e:
             self.error_label.setText(str(e))
             return

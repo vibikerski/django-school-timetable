@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import (QSizePolicy, QApplication, QMainWindow, QWidget,
                              QPushButton, QVBoxLayout, QGraphicsScene,
                              QGraphicsView)
 from PyQt6.QtGui import QFont
-from entity_interface import EntityWindow
+from interface.entity_interface import EntityWindow
 
 class MainWindow(QMainWindow):
     def __init__(self):
