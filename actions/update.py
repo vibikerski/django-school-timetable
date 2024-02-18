@@ -1,6 +1,6 @@
 from actions.base_handler import get_instance, field_model
 from actions.base_handler import get_fields as fields
-from validation import validate_updating
+from actions.validation import validate_updating
 
 def proccess_fields(values, entity_type):
     instance_values = {}
@@ -24,7 +24,7 @@ def proccess_fields(values, entity_type):
 
     return instance_values
 
-def update_entity(values, entity_type):
+def entity(values, entity_type):
     if err := validate_updating(values, entity_type):
         return {"error": err, "data": None}
 
